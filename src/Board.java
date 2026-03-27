@@ -19,17 +19,17 @@ public class Board {
 
     public void colocarBarcos() {
 
-        for (int i = 0; i < flota.length; i++) {
+        for (int contadorDeBarcos = 0; contadorDeBarcos < flota.length; contadorDeBarcos++) {
             Coordenadas posicion = colocarBarcosAleatorios();
             if (posicion.getOrientacion() == 0) {
-                if (posicion.getVertical() - flota[i].getTamanio() > 0) {
-                    for (int j = posicion.getVertical(); j < posicion.getVertical() - flota[i].getTamanio(); j++) {
-                        tablero[j][i].isVaixell();
+                if (posicion.getVertical() - flota[contadorDeBarcos].getTamanio() > 0) {
+                    for (int j = posicion.getVertical(); j > posicion.getVertical() - flota[contadorDeBarcos].getTamanio(); j--) {
+                        tablero[j][posicion.getHorizontal()].setBarco(flota[contadorDeBarcos]);
                     }
 
-                } else if (posicion.getVertical() + flota[i].getTamanio() > filas) {
-                    for (int j = posicion.getVertical(); j < posicion.getVertical() + flota[i].getTamanio(); j++) {
-                         tablero[i][j].setBarco(flota[i]);
+                } else if (posicion.getVertical() + flota[contadorDeBarcos].getTamanio() > filas) {
+                    for (int j = posicion.getVertical(); j < posicion.getVertical() + flota[contadorDeBarcos].getTamanio(); j++) {
+                         tablero[j][posicion.getHorizontal()].setBarco(flota[contadorDeBarcos]);
                     }
 
 
