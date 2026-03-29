@@ -4,6 +4,7 @@ public class Celda {
     private boolean ocupada;
     private boolean atacada;
     private boolean vaixell;
+
     public Ship getBarco() {
         return barco;
     }

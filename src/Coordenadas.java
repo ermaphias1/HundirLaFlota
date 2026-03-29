@@ -20,4 +20,8 @@ public class Coordenadas {
     public int getOrientacion() {
         return orientacion;
     }
+
+    public String toString() {
+        return "Fila: " + horizontal + ", Col: " + vertical + ", Ori: " + orientacion;
+    }
 }
