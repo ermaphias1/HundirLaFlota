@@ -24,4 +24,8 @@ public class Ship {
     public boolean[] getPartesTocadas() {
         return partesTocadas;
     }
+
+    public String toString(){
+        return "Tamanio" + getTamanio();
+    }
 }
