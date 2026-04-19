@@ -1,97 +1,141 @@
 import java.util.Random;
-
 public class Board {
     private Random rnd= new Random();
-    private int filas=5;
-    private int columnas=5;
-    private Celda [][] tablero;
-    private Ship[] flota=new Ship[6];
+    private final int FILAS=6;
+    private int COLUMNAS=6;
+    private Celda [][] tablero=new Celda[FILAS][COLUMNAS];
+    private Ship[] flota;
     Coordenadas posicion;
-    public void inicializarFlota() {
-        int[] tamanos = { 3, 2, 2, 1, 1, 1};
-        for (int i = 0; i < tamanos.length; i++) {
-             flota[i] = new Ship(tamanos[i]);
+
+
+     public Board(){
+         inicializarLasCeldas();
+         inicializarFlota();
+     }
+
+    public void inicializarLasCeldas(){
+        for(int i=0;i<FILAS;i++){
+            for(int j=0;j<COLUMNAS;j++){
+                tablero[i][j]=new Celda();
+            }
         }
+    }
+
+    public void inicializarFlota() {
+        flota = new Ship[6]; // Creamos el hueco para 6 barcos
+
+        // 1 Buque (Tamaño 3)
+        flota[0] = new Ship(TipoDeBarco.BUQUE);
+
+        // 2 Submarinos (Tamaño 2)
+        flota[1] = new Ship(TipoDeBarco.SUBMARINO);
+        flota[2] = new Ship(TipoDeBarco.SUBMARINO);
+
+        // 3 Lanchas (Tamaño 1)
+        flota[3] = new Ship(TipoDeBarco.LANCHA);
+        flota[4] = new Ship(TipoDeBarco.LANCHA);
+        flota[5] = new Ship(TipoDeBarco.LANCHA);
     }
 
     public void colocarBarcos() {
         for (int contadorDeBarcos = 0; contadorDeBarcos < flota.length; contadorDeBarcos++) {
-            Coordenadas posicion = dameCoordenadasAleatorias();
-            if (sePuedeColocar(posicion, flota[contadorDeBarcos])) {
-                if (posicion.getHorizontal() == 0) {
-                    for (int j = posicion.getVertical(); j > posicion.getVertical() - flota[contadorDeBarcos].getTamanio(); j--) {
-                        tablero[j][posicion.getHorizontal()].setBarco(flota[contadorDeBarcos]);
+            boolean flag=true;
+            while(flag){
+                Coordenadas posicion = dameCoordenadasAleatorias();
+                if (sePuedeColocar(posicion, flota[contadorDeBarcos].getTamanio()) && !hayBarcosCerca(posicion,flota[contadorDeBarcos].getTamanio())) {
+                    int p=0;
+                    if (!posicion.isHorizontal()) {
+                        for (int j = posicion.getFila(); j > posicion.getFila() - flota[contadorDeBarcos].getTamanio(); j--) {
+                                tablero[j][posicion.getColumna()].setMiPieza(flota[contadorDeBarcos].getPiezas()[p]);
+                            p++;
+                        }
+
+                    } else {
+                        for (int j = posicion.getColumna(); j > posicion.getColumna() - flota[contadorDeBarcos].getTamanio(); j--) {
+                            tablero[posicion.getColumna()][j].setMiPieza(flota[contadorDeBarcos].getPiezas()[p]);
+                            p++;
+                        }
+
                     }
-                } else if (posicion.getOrientacion() == 1) {
-                    for (int j = posicion.getHorizontal(); j > posicion.getHorizontal() - flota[contadorDeBarcos].getTamanio(); j--) {
-                        tablero[posicion.getHorizontal()][j].setBarco(flota[contadorDeBarcos]);
-                    }
+
+                    flag=false;
+                    System.out.println("Es false");
                 }
             }
+
         }
     }
 
-
-
     public boolean hayBarcosCerca(Coordenadas pos, int tamanio) {
-        int fila = pos.getVertical();
-        int col = pos.getHorizontal();
-        int ori = pos.getOrientacion();
+        int fila = pos.getFila();
+        int col = pos.getColumna();
+        boolean ori = pos.isHorizontal();
 
-        int filaFin = (ori == 0) ? (fila + tamanio) : (fila + 1);
-        int colFin  = (ori == 1) ? (col + tamanio)  : (col + 1);
+        int filaFin = (ori) ? (fila + tamanio) : (fila + 1);
+        int colFin  = (ori) ? (col + tamanio)  : (col + 1);
 
         for (int i = fila - 1; i <= filaFin; i++) {
             for (int j = col - 1; j <= colFin; j++) {
 
-                if (i >= 0 && i < filas && j >= 0 && j < columnas) {
-                    if (tablero[i][j].isVaixell()) {
-                        return false;
+                if (i >= 0 && i < FILAS && j >= 0 && j < COLUMNAS) {
+                    if (tablero[i][j].hayBarco()) {
+                        return true;
                     }
                 }
             }
         }
-        return true;
+        return false;
     }
 
 
     public boolean sePuedeColocar(Coordenadas pos, int tamanio) {
-        int fila = pos.getVertical();
-        int col = pos.getHorizontal();
-        int ori = pos.getOrientacion();
-        if (ori==0){
-            if(fila-tamanio+1<0){
+        int fila = pos.getFila();
+        int col = pos.getColumna();
+        boolean ori = pos.isHorizontal();
+        if (ori){
+            if(fila+1 < tamanio){
                 return false;
             }
             for (int j = fila; j > fila - tamanio ; j-- ) {
-                if (tablero[j][col].isVaixell())
+                if (tablero[j][col].hayBarco()){
                     return false;
+                }
+
             }
             return true;
-        } else if (ori==1){
-            if(fila+tamanio>filas){
+        } else {
+            if(col+tamanio>COLUMNAS){
                 return false;
             }
-            for (int j = fila; j < fila + tamanio ; j++ ) {
-                if (tablero[j][col].isVaixell())
+            for (int j = col; j < col + tamanio ; j++ ) {
+                if (tablero[fila][j].hayBarco())
                     return false;
             }
             return true;
-
         }
         return false;
     }
 
-        public Coordenadas dameCoordenadasAleatorias () {
-            int filaAleatoria = rnd.nextInt(filas);
-            int colAleatoria = rnd.nextInt(columnas);
-            int orientacion = rnd.nextInt(2);
-            Coordenadas coordenadasAleatorias = new Coordenadas(filaAleatoria, colAleatoria, orientacion);
-            return coordenadasAleatorias;
+    public Coordenadas dameCoordenadasAleatorias () {
+        int filaAleatoria = rnd.nextInt(FILAS);
+        int colAleatoria = rnd.nextInt(COLUMNAS);
+        int orientacion = rnd.nextInt(2);
+        boolean horizontal = orientacion == 1;
 
-        }
+        return new Coordenadas(filaAleatoria, colAleatoria, horizontal);
+    }
 
+    public int getFILAS() {
+        return FILAS;
+    }
 
+    public int getCOLUMNAS() {
+        return COLUMNAS;
+    }
 
+    public Celda getCelda(int f, int c) {
+        return tablero[f][c];
+    }
 }
+
 

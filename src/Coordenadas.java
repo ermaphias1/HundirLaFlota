@@ -1,27 +1,24 @@
 public class Coordenadas {
-    private int horizontal;
-    private int vertical;
-    private int orientacion;
+    private int fila;
+    private int columna;
+    private boolean horizontal;
 
-    public Coordenadas(int horizontal, int vertical, int orientacion){
+    public Coordenadas(int fila, int columna, boolean horizontal){
+        this.fila=fila;
+        this.columna=columna;
         this.horizontal=horizontal;
-        this.vertical=vertical;
-        this.orientacion=orientacion;
     }
-
-    public int getHorizontal() {
+    public int getFila() {
+        return fila;
+    }
+    public int getColumna() {
+        return columna;
+    }
+    public boolean isHorizontal() {
         return horizontal;
     }
 
-    public int getVertical() {
-        return vertical;
-    }
-
-    public int getOrientacion() {
-        return orientacion;
-    }
-
     public String toString() {
-        return "Fila: " + horizontal + ", Col: " + vertical + ", Ori: " + orientacion;
+        return "Fila: " + fila + ", Col: " + columna + ", Ori: " + horizontal;
     }
 }

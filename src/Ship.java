@@ -1,27 +1,27 @@
 public class Ship {
 
-    private int tamanio;
-    private boolean [] partesTocadas;
+    private TipoDeBarco tipo;
+    private CeldaDeBarco[] piezas;
 
-    public Ship(int tamanio){
-        this.tamanio=tamanio;
-        this.partesTocadas = new boolean[tamanio];
-    }
-
-    public boolean hundido(){
-        for (int i = 0; i <  partesTocadas.length ; i++) {
-            if ( partesTocadas[i]==false){
-                return false;
-            }
+    public Ship(TipoDeBarco tipo){
+        this.tipo=tipo;
+        this.piezas = new CeldaDeBarco[tipo.getTamanyo()];
+        for (int i = 0; i < piezas.length; i++) {
+            piezas[i] = new CeldaDeBarco(this);
         }
-        return true;
-    }
 
+
+    }
     public int getTamanio() {
-        return tamanio;
+        return tipo.getTamanyo();
     }
 
-    public boolean[] getPartesTocadas() {
-        return partesTocadas;
+    public CeldaDeBarco[] getPiezas() {
+        return piezas;
+    }
+
+
+    public String toString(){
+        return "Tamanio" + getTamanio();
     }
 }
