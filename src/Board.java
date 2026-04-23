@@ -37,42 +37,41 @@ public class Board {
         flota[5] = new Ship(TipoDeBarco.LANCHA);
     }
 
+
     public void colocarBarcos() {
-        for (int contadorDeBarcos = 0; contadorDeBarcos < flota.length; contadorDeBarcos++) {
-            boolean flag=true;
-            while(flag){
-                Coordenadas posicion = dameCoordenadasAleatorias();
-                if (sePuedeColocar(posicion, flota[contadorDeBarcos].getTamanio()) && !hayBarcosCerca(posicion,flota[contadorDeBarcos].getTamanio())) {
-                    int p=0;
-                    if (!posicion.isHorizontal()) {
-                        for (int j = posicion.getFila(); j > posicion.getFila() - flota[contadorDeBarcos].getTamanio(); j--) {
-                                tablero[j][posicion.getColumna()].setMiPieza(flota[contadorDeBarcos].getPiezas()[p]);
-                            p++;
-                        }
 
-                    } else {
-                        for (int j = posicion.getColumna(); j > posicion.getColumna() - flota[contadorDeBarcos].getTamanio(); j--) {
-                            tablero[posicion.getColumna()][j].setMiPieza(flota[contadorDeBarcos].getPiezas()[p]);
-                            p++;
-                        }
+        for (int i = 0; i < flota.length; i++) {
+            boolean colocado = false;
+            int tamano = flota[i].getTamanio();
 
+            while (!colocado) {
+                Coordenadas pos = dameCoordenadasAleatorias();
+
+
+                if (sePuedeColocar(pos, tamano) && !hayBarcosCerca(pos, tamano)) {
+
+                    for (int j = 0; j < tamano; j++) {
+                        if (pos.isHorizontal()) {
+
+                            tablero[pos.getFila()][pos.getColumna() + j].setMiPieza(flota[i].getPiezas()[j]);
+                        } else {
+
+                            tablero[pos.getFila() + j][pos.getColumna()].setMiPieza(flota[i].getPiezas()[j]);
+                        }
                     }
-
-                    flag=false;
-                    System.out.println("Es false");
+                    colocado = true;
                 }
             }
-
         }
     }
 
     public boolean hayBarcosCerca(Coordenadas pos, int tamanio) {
         int fila = pos.getFila();
         int col = pos.getColumna();
-        boolean ori = pos.isHorizontal();
+        boolean horizontal = pos.isHorizontal();
 
-        int filaFin = (ori) ? (fila + tamanio) : (fila + 1);
-        int colFin  = (ori) ? (col + tamanio)  : (col + 1);
+        int filaFin = (horizontal) ? (fila + tamanio) : (fila + 1);
+        int colFin  = (horizontal) ? (col + tamanio)  : (col + 1);
 
         for (int i = fila - 1; i <= filaFin; i++) {
             for (int j = col - 1; j <= colFin; j++) {
@@ -91,9 +90,9 @@ public class Board {
     public boolean sePuedeColocar(Coordenadas pos, int tamanio) {
         int fila = pos.getFila();
         int col = pos.getColumna();
-        boolean ori = pos.isHorizontal();
-        if (ori){
-            if(fila+1 < tamanio){
+        boolean horizontal = pos.isHorizontal();
+        if (horizontal){
+            if(fila+tamanio < FILAS){
                 return false;
             }
             for (int j = fila; j > fila - tamanio ; j-- ) {
@@ -113,16 +112,35 @@ public class Board {
             }
             return true;
         }
-        return false;
-    }
+            }
 
     public Coordenadas dameCoordenadasAleatorias () {
         int filaAleatoria = rnd.nextInt(FILAS);
         int colAleatoria = rnd.nextInt(COLUMNAS);
         int orientacion = rnd.nextInt(2);
         boolean horizontal = orientacion == 1;
-
         return new Coordenadas(filaAleatoria, colAleatoria, horizontal);
+    }
+
+    public void mostrarTablero() {
+        // Imprimimos los números de las columnas arriba para guiarnos
+        System.out.println("   0  1  2  3  4  5");
+
+        for (int i = 0; i < FILAS; i++) {
+            // Imprimimos el número de la fila a la izquierda
+            System.out.print(i + " ");
+
+            for (int j = 0; j < COLUMNAS; j++) {
+                // Aquí es donde decidimos qué dibujar
+                if (tablero[i][j].hayBarco()) {
+                    System.out.print("🚢 "); // Si hay un barco, lo mostramos
+                } else {
+                    System.out.print("🌊 "); // Si no, mostramos agua
+                }
+            }
+            // Muy importante: saltar de línea al terminar cada fila
+            System.out.println();
+        }
     }
 
     public int getFILAS() {
@@ -136,6 +154,46 @@ public class Board {
     public Celda getCelda(int f, int c) {
         return tablero[f][c];
     }
+
+
+    public void disparar(int f,int c){
+         tablero[f][c].setAtacada(true);
+         if (tablero[f][c].hayBarco()){
+             System.out.println("💥 ¡TOCADO!");
+
+         } else{
+             System.out.println("⚪ ¡AGUA!");
+         }
+    }
+    public void mostrarTableroPropio()  {
+        System.out.println("   0  1  2  3  4  5");
+
+        for (int i = 0; i < FILAS; i++) {
+            // Imprimimos el número de la fila a la izquierda
+            System.out.print(i + " ");
+
+            for (int j = 0; j < COLUMNAS; j++) {
+
+                if (tablero[i][j].hayBarco()) {
+                    if (tablero[i][j].isAtacada()) {
+                        System.out.print("💥");
+                    } else {
+                        System.out.print("🚢");
+                    }
+                } else {
+                        if (tablero[i][j].isAtacada()) {
+                            System.out.print("⚪");
+                        } else {
+                            System.out.print("🌊");
+                        }
+                    }
+
+                    }
+            // Muy importante: saltar de línea al terminar cada fila
+            System.out.println();
+        }
+    }
+
 }
 
 
