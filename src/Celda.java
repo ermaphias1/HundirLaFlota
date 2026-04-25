@@ -2,12 +2,11 @@ public class Celda {
     private CeldaDeBarco miPieza;
     private boolean atacada;
     private boolean disparada=false;
-    //private boolean hayBarco;
-    // Constructor: Al crear la celda, está vacía y sana
+
+
     public Celda() {
         this.miPieza = null; // Agua por defecto
         this.atacada = false;
-        //this.hayBarco = false; // Inicialmente es agua
     }
 
     public boolean isDisparada() {
@@ -26,11 +25,8 @@ public class Celda {
         this.atacada = atacada;
     }
 
-
     public void setMiPieza(CeldaDeBarco miPieza) {
         this.miPieza = miPieza;
-        //this.hayBarco = true; // O como lo hayas nombrado
-
     }
 
     public void recibirDisparo(){

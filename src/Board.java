@@ -7,7 +7,6 @@ public class Board {
     private Ship[] flota;
     Coordenadas posicion;
 
-
      public Board(){
          inicializarLasCeldas();
          inicializarFlota();
@@ -40,22 +39,18 @@ public class Board {
 
     public void colocarBarcos() {
 
+
         for (int i = 0; i < flota.length; i++) {
             boolean colocado = false;
             int tamano = flota[i].getTamanio();
 
             while (!colocado) {
                 Coordenadas pos = dameCoordenadasAleatorias();
-
-
                 if (sePuedeColocar(pos, tamano) && !hayBarcosCerca(pos, tamano)) {
-
                     for (int j = 0; j < tamano; j++) {
                         if (pos.isHorizontal()) {
-
                             tablero[pos.getFila()][pos.getColumna() + j].setMiPieza(flota[i].getPiezas()[j]);
                         } else {
-
                             tablero[pos.getFila() + j][pos.getColumna()].setMiPieza(flota[i].getPiezas()[j]);
                         }
                     }
@@ -67,7 +62,7 @@ public class Board {
 
     public boolean hayBarcosCerca(Coordenadas pos, int tamanio) {
         int fila = pos.getFila();
-        int col = pos.getColumna();
+        int col =  pos.getColumna();
         boolean horizontal = pos.isHorizontal();
 
         int filaFin = (horizontal) ? (fila + tamanio) : (fila + 1);
@@ -75,7 +70,6 @@ public class Board {
 
         for (int i = fila - 1; i <= filaFin; i++) {
             for (int j = col - 1; j <= colFin; j++) {
-
                 if (i >= 0 && i < FILAS && j >= 0 && j < COLUMNAS) {
                     if (tablero[i][j].hayBarco()) {
                         return true;

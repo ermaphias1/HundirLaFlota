@@ -1,5 +1,4 @@
 public class Ship {
-
     private TipoDeBarco tipo;
     private CeldaDeBarco[] piezas;
 
@@ -9,9 +8,8 @@ public class Ship {
         for (int i = 0; i < piezas.length; i++) {
             piezas[i] = new CeldaDeBarco(this);
         }
-
-
     }
+
     public int getTamanio() {
         return tipo.getTamanyo();
     }
@@ -19,7 +17,6 @@ public class Ship {
     public CeldaDeBarco[] getPiezas() {
         return piezas;
     }
-
 
     public String toString(){
         return "Tamanio" + getTamanio();
